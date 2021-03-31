@@ -29,9 +29,9 @@ struct dados_jogador
 };
 
 int globalLinhaPonteiro = 0, globalColunaPonteiro = 0;
-char globalPecaBackupDoPonteiro;
+char globalPecaBackupDoPonteiro = ' ';
 int globalLinhaPecaCapturada = 0, globalColunaPecaCapturada = 0;
-char globalPecaCapturada;
+char globalPecaCapturada = ' ';
 
 void registraTeclasDoJogo()
 {
@@ -205,23 +205,43 @@ char** organizaTabuleiroBackEndIncial() {
 
 void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 
-
 	if (movimento == TECLA_MARCADOR_INICIAL)
 	{
 		globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
 		matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
 	}
 
-
-
 	if (movimento == TECLA_GAMEPLAY_ACAO_CAPTURAR)
 	{
+		if (globalPecaBackupDoPonteiro != ' ')
+		{
+			//CAPTURO PECA
+			globalPecaCapturada = globalPecaBackupDoPonteiro;
 
+			//ADICIONO O NO LOCAL 
+			globalPecaBackupDoPonteiro = 'C';
+
+			//GUARDO A LOCALIZACAO DA PECA ANTERIOR
+			globalLinhaPecaCapturada = globalLinhaPonteiro;
+			globalColunaPecaCapturada = globalColunaPonteiro;
+
+		}
 	}
 
 	if (movimento == TECLA_GAMEPLAY_ACAO_SOLTAR)
 	{
+		//VERIFICO SE O lOCAL ATUAL PARA SOLTAR PECA TEM QUE ESTAR VAZIO
+		if (globalPecaBackupDoPonteiro == ' ')
+		{
+				//RETIRO A PECA DO LOCAL ANTERIOR 
+				matriz[globalLinhaPecaCapturada][globalColunaPecaCapturada] = ' ';
 
+				//SOLTO A PECA NO NOVO LOCAL
+				matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaCapturada;
+
+				//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
+				globalPecaBackupDoPonteiro = globalPecaCapturada;
+		}
 	}
 
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_RIGHT)
@@ -235,7 +255,6 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 		}
 	}
 
-
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_LEFT)
 	{
 		if (globalColunaPonteiro > 0 && globalColunaPonteiro <= 7)
@@ -247,7 +266,6 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 		}
 	}
 
-
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_UP)
 	{
 		if (globalLinhaPonteiro > 0 && globalLinhaPonteiro <= 7)
@@ -258,7 +276,6 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
 		}
 	}
-
 
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_DOWN)
 	{
