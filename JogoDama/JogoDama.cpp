@@ -16,7 +16,53 @@ struct dados_jogador
 	bool vencedor = false;
 };
 
-void TabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
+int globalLinhaPonteiro = 0, globalColunaPonteiro = 0;
+char globalPecaBackupDoPonteiro;
+char globalProxPecaBackupDoPonteiro;
+
+void registraTeclasDoJogo()
+{
+	//DOC teclas virtuais https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+	//DOC registro de teclas https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerhotkey
+
+	//TECLAS DE GAMEPLAY
+	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x26);//DIRECIONAL PARA CIMA
+	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x28);//DIRECIONAL PARA BAIXO
+	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x27);//DIRECIONAL PARA DIREITA
+	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x25);//DIRECIONAL PARA ESQUERDA
+	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x70);//F1 = CAPTURA A PECA
+	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x71);//F2 = SOLTA A PECA
+	
+	//TECLAS DE MENU
+	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x61);//FUNCAO NUMERO 1
+	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x62);//FUNCAO NUMERO 2
+	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x63);//FUNCAO NUMERO 3
+}
+
+void intro() {
+
+	printf("############ Bem vindo ao jogo DamaBreuva!!! ############\n\n");
+	printf("Pressione a tecla numero 1 para Comecar a jogar\n");
+	printf("Pressione a tecla numero 2 para acessar o tutorial do jogo\n");
+	printf("Pressione a tecla numero 3 para Sair\n");
+}
+
+void ImprimeTutorial()
+{
+	printf("##### Tutorial DamaBreuva ######");
+	printf("\n\nMovimentacao no tabuleiro:\n");
+	printf("Direcional para cima\n");
+	printf("Direcional para baixo\n");
+	printf("Direcional para esquerda\n");
+	printf("Direcional para direita\n");
+	printf("\n\nMovimentação das pecas no tabuleiro:\n");
+	printf("Passo 1: Selecionar peca pressionando F1\n");
+	printf("Passo 2: Usar os direcionais para escolher uma casa onde a peca vai ficar\n");
+	printf("Passo 3: Soltar a peca pressionando F2\n");
+	printf("Passo 4: Repetir o processo para todas as jogadas\n\n");
+}
+
+void tabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
 	int descontoLinhasInterfaceMatriz = 0;
 	system("cls");
 
@@ -34,79 +80,33 @@ void TabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
 			{
 
 				if (linhasInterface == 1) {
-
-					if (colunasInterface % 2 == 0)
 						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
-					else
-						printf("      ");
-
 				}
 				else if (linhasInterface == 3) {
-
-					if (colunasInterface % 2 != 0)
 						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
-					else
-						printf("      ");
-
 				}
 				else if (linhasInterface == 5) {
-
-					if (colunasInterface % 2 == 0)
 						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
-					else
-						printf("      ");
-
 				}
 				else if (linhasInterface == 11) {
 
-					if (colunasInterface % 2 != 0)
 						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
-					else
-						printf("      ");
-
 				}
 				else if (linhasInterface == 13) {
 
-					if (colunasInterface % 2 == 0)
 						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
-					else
-						printf("      ");
-
 				}
 				else if (linhasInterface == 15) {
 
-					if (colunasInterface % 2 != 0)
 						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
-					else
-						printf("      ");
-
 				}
 				else {
-
-					printf("    %c ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+					printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
-
-				/*
-				//xadrez
-				if (linhasInterface == 1 ) {
-					printf("  PB  ");
-				}
-				else if (linhasInterface == 3) {
-					printf("  PB  ");
-				}else if (linhasInterface == 13) {
-					printf("  PP  ");
-				}
-				else if (linhasInterface == 15) {
-					printf("  PP  ");
-				}
-				else {
-					printf("      ");
-				}*/
 
 				if (colunasInterface < 8) {
 					printf("|");
 				}
-
 				printf("   ");
 			}
 		}
@@ -114,20 +114,7 @@ void TabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
 	printf("\n\n\n");
 }
 
-void registraTeclasDirecionais()
-{
-	//DOC teclas virtuais https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-	//DOC registro de teclas https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerhotkey
-	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x26);//DIRECIONAL PARA CIMA
-	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x28);//DIRECIONAL PARA BAIXO
-	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x27);//DIRECIONAL PARA DIREITA
-	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x25);//DIRECIONAL PARA ESQUERDA
-	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x70);//F1 = CAPTURA A PECA
-	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x71);//F2 = SOLTA A PECA
-
-}
-
-char** iniciaJogada() {
+char** organizaTabuleiroBackEndIncial() {
 	char** matriz = NULL;
 
 	matriz = (char**)malloc(linhas * sizeof(char*));
@@ -183,15 +170,67 @@ char** iniciaJogada() {
 			}
 		}
 	}
-
-	registraTeclasDirecionais();
-
 	return matriz;
 }
 
-int CapturaTecladoDirecional() {
-	MSG msg = { 0 };
+void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 
+	if (movimento == 0)
+	{
+		globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
+		matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+	}
+
+
+	if (movimento == 6)
+	{
+		if (globalColunaPonteiro >= 0 && globalColunaPonteiro < 7)
+		{
+			matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
+			globalColunaPonteiro++;
+			globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
+			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+		}
+	}
+
+	if (movimento == 4)
+	{
+		if (globalColunaPonteiro > 0 && globalColunaPonteiro <= 7)
+		{
+			matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
+			globalColunaPonteiro--;
+			globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
+			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+		}
+	}
+
+	if (movimento == 8)
+	{
+		if (globalLinhaPonteiro > 0 && globalLinhaPonteiro <= 7)
+		{
+			matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
+			globalLinhaPonteiro--;
+			globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
+			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+		}
+	}
+
+	if (movimento == 2)
+	{
+		if (globalLinhaPonteiro >= 0 && globalLinhaPonteiro < 7)
+		{
+			matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
+			globalLinhaPonteiro++;
+			globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
+			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+		}
+	}
+
+	///return matriz;
+}
+
+int CapturaTeclado() {
+	MSG msg = { 0 };
 
 	while (GetMessage(&msg, NULL, 0, 0) != 0)
 	{
@@ -213,23 +252,57 @@ int CapturaTecladoDirecional() {
 			if (msg.lParam == 7405568)//SOLTAR
 				return 3;
 
+			//TECLA MENU
+			if (msg.lParam == 6356992)//OPCAO JOGAR 
+				return 1;
+			if (msg.lParam == 6422528)//OPCAO TUTORIAL
+				return 2;
+			if (msg.lParam == 6488064)//OPCAO SAIR
+				return 3;
 		}
 	}
 }
 
 int main() {
-	//char** matriz; 
+	char** matriz; 
+	int teclaDirecional = 0;
+	bool sair = false;
 
-	//matriz = iniciaJogada();
+	registraTeclasDoJogo();
+	matriz = organizaTabuleiroBackEndIncial();
 
-	//XadrezUserIterface(matriz);
-	registraTeclasDirecionais();
-	int teclaDirecional;
+	while (sair == false) {
+		intro();
 
-	while (true) {
-		printf("Digite uma tecla direcional, ex: ALT+8, ALT+4, ALT+6, ALT+2 \n");
-		teclaDirecional = CapturaTecladoDirecional();
-		printf("Tecla Capturada = %d\n", teclaDirecional);
+		teclaDirecional = CapturaTeclado();
+
+		switch (teclaDirecional) {
+
+			case 1:
+				system("cls");
+
+				//inicio ponteiro em 0,0
+				movimentacaoNoTabuleiroBackEnd(matriz, 0);
+
+				while (true) {
+					tabuleiroDamaUserIterface(matriz);
+					teclaDirecional = CapturaTeclado();
+					movimentacaoNoTabuleiroBackEnd(matriz, teclaDirecional);
+				}
+				system("pause");
+			break;
+
+			case 2:
+				system("cls");
+				ImprimeTutorial();
+				system("pause");
+				system("cls");
+			break;
+
+			case 3:
+				sair = true;
+			break;
+		}
 	}
 
 	system("pause");
