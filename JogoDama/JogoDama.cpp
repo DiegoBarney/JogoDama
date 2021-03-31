@@ -18,7 +18,6 @@ struct dados_jogador
 
 int globalLinhaPonteiro = 0, globalColunaPonteiro = 0;
 char globalPecaBackupDoPonteiro;
-char globalProxPecaBackupDoPonteiro;
 
 void registraTeclasDoJogo()
 {
@@ -50,16 +49,33 @@ void intro() {
 void ImprimeTutorial()
 {
 	printf("##### Tutorial DamaBreuva ######");
+
+	printf("\n\nControles do Jogo:\n");
+	printf("Direcional para cima.\n");
+	printf("Direcional para baixo.\n");
+	printf("Direcional para esquerda.\n");
+	printf("Direcional para direita.\n");
+	printf("F1 Seleciona Peca.\n");
+	printf("F2 Solta Peca.\n");
+
 	printf("\n\nMovimentacao no tabuleiro:\n");
-	printf("Direcional para cima\n");
-	printf("Direcional para baixo\n");
-	printf("Direcional para esquerda\n");
-	printf("Direcional para direita\n");
-	printf("\n\nMovimentação das pecas no tabuleiro:\n");
-	printf("Passo 1: Selecionar peca pressionando F1\n");
-	printf("Passo 2: Usar os direcionais para escolher uma casa onde a peca vai ficar\n");
-	printf("Passo 3: Soltar a peca pressionando F2\n");
-	printf("Passo 4: Repetir o processo para todas as jogadas\n\n");
+	printf("Direcional para cima.\n");
+	printf("Direcional para baixo.\n");
+	printf("Direcional para esquerda.\n");
+	printf("Direcional para direita.\n");
+
+	printf("\n\nMovimentacao das pecas no tabuleiro:\n");
+	printf("Passo 1: Selecionar peca pressionando F1.\n");
+	printf("Passo 2: Usar os direcionais para escolher uma casa onde a peca vai ficar.\n");
+	printf("Passo 3: Soltar a peca pressionando F2.\n");
+	printf("Passo 4: Repetir o processo para todas as jogadas.\n");
+
+	printf("\n\nSignificados de siglas do jogo:\n");
+	printf("P = Peca Preta.\n");
+	printf("B = Peca Branca.\n");
+	printf("W = Peca Branca Dama.\n");
+	printf("X = Peca Preta Dama.\n");
+	printf("T = Ponteiro onde o jogador esta localizado na movimentacão.\n\n");
 }
 
 void tabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
@@ -67,47 +83,46 @@ void tabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
 	system("cls");
 
 	for (int linhasInterface = 1; linhasInterface <= tamLinhasInterface; linhasInterface++) {
-
 		printf("\n");
 
 		if (linhasInterface % 2 == 0)
 		{
-			printf("______________________________________________________________________________\n");
+			printf("________________________________________________________________________________\n");
 		}
 		else {
+
 			descontoLinhasInterfaceMatriz++;
+
 			for (int colunasInterface = 0; colunasInterface < tamColunasInterface; colunasInterface++)
 			{
-
 				if (linhasInterface == 1) {
-						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("    %c    ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else if (linhasInterface == 3) {
-						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("    %c    ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else if (linhasInterface == 5) {
-						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("    %c    ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else if (linhasInterface == 11) {
 
-						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("    %c    ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else if (linhasInterface == 13) {
 
-						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("    %c    ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else if (linhasInterface == 15) {
 
-						printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("    %c    ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else {
-					printf("  %c   ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+					printf("    %c    ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 
 				if (colunasInterface < 8) {
 					printf("|");
 				}
-				printf("   ");
 			}
 		}
 	}
@@ -181,7 +196,6 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 		matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
 	}
 
-
 	if (movimento == 6)
 	{
 		if (globalColunaPonteiro >= 0 && globalColunaPonteiro < 7)
@@ -192,6 +206,7 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
 		}
 	}
+
 
 	if (movimento == 4)
 	{
@@ -204,6 +219,7 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 		}
 	}
 
+
 	if (movimento == 8)
 	{
 		if (globalLinhaPonteiro > 0 && globalLinhaPonteiro <= 7)
@@ -215,6 +231,7 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 		}
 	}
 
+
 	if (movimento == 2)
 	{
 		if (globalLinhaPonteiro >= 0 && globalLinhaPonteiro < 7)
@@ -225,8 +242,6 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
 		}
 	}
-
-	///return matriz;
 }
 
 int CapturaTeclado() {
