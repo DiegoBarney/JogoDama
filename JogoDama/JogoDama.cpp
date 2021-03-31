@@ -3,11 +3,23 @@
 #include <stdlib.h>
 #include <windows.h>
 
-#define linhas 8
-#define colunas 8
+#define LINHAS 8
+#define COLUNAS 8
 
-#define tamLinhasInterface 15
-#define tamColunasInterface 8
+#define TAM_LINHAS_INTERFACE 15
+#define TAM_COLUNAS_INTERFACE 8
+
+#define TECLA_MENU_OPCAO_JOGAR 1
+#define TECLA_MENU_OPCAO_TUTORIAL 2
+#define TECLA_MENU_OPCAO_SAIR 3
+
+#define TECLA_GAMEPLAY_DIRECIONAL_UP 8
+#define TECLA_GAMEPLAY_DIRECIONAL_DOWN 2
+#define TECLA_GAMEPLAY_DIRECIONAL_RIGHT 6
+#define TECLA_GAMEPLAY_DIRECIONAL_LEFT 4
+#define TECLA_GAMEPLAY_ACAO_CAPTURAR 5
+#define TECLA_GAMEPLAY_ACAO_SOLTAR 3
+#define TECLA_MARCADOR_INICIAL 0
 
 struct dados_jogador
 {
@@ -18,6 +30,8 @@ struct dados_jogador
 
 int globalLinhaPonteiro = 0, globalColunaPonteiro = 0;
 char globalPecaBackupDoPonteiro;
+int globalLinhaPecaCapturada = 0, globalColunaPecaCapturada = 0;
+char globalPecaCapturada;
 
 void registraTeclasDoJogo()
 {
@@ -39,6 +53,7 @@ void registraTeclasDoJogo()
 }
 
 void intro() {
+
 
 	printf("############ Bem vindo ao jogo DamaBreuva!!! ############\n\n");
 	printf("Pressione a tecla numero 1 para Comecar a jogar\n");
@@ -82,7 +97,7 @@ void tabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
 	int descontoLinhasInterfaceMatriz = 0;
 	system("cls");
 
-	for (int linhasInterface = 1; linhasInterface <= tamLinhasInterface; linhasInterface++) {
+	for (int linhasInterface = 1; linhasInterface <= TAM_LINHAS_INTERFACE; linhasInterface++) {
 		printf("\n");
 
 		if (linhasInterface % 2 == 0)
@@ -93,7 +108,7 @@ void tabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
 
 			descontoLinhasInterfaceMatriz++;
 
-			for (int colunasInterface = 0; colunasInterface < tamColunasInterface; colunasInterface++)
+			for (int colunasInterface = 0; colunasInterface < TAM_COLUNAS_INTERFACE; colunasInterface++)
 			{
 				if (linhasInterface == 1) {
 						printf("    %c    ", matrizJogoPreenchida[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
@@ -132,15 +147,15 @@ void tabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
 char** organizaTabuleiroBackEndIncial() {
 	char** matriz = NULL;
 
-	matriz = (char**)malloc(linhas * sizeof(char*));
+	matriz = (char**)malloc(LINHAS * sizeof(char*));
 
-	for (int i = 0; i < linhas; ++i)
-		matriz[i] = (char*)malloc(colunas * sizeof(char));
+	for (int i = 0; i < LINHAS; ++i)
+		matriz[i] = (char*)malloc(COLUNAS * sizeof(char));
 
 
-	for (int l = 0; l < linhas; l++)
+	for (int l = 0; l < LINHAS; l++)
 	{
-		for (int c = 0; c < colunas; c++)
+		for (int c = 0; c < COLUNAS; c++)
 		{
 			if (l == 0) {
 
@@ -190,13 +205,26 @@ char** organizaTabuleiroBackEndIncial() {
 
 void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 
-	if (movimento == 0)
+
+	if (movimento == TECLA_MARCADOR_INICIAL)
 	{
 		globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
 		matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
 	}
 
-	if (movimento == 6)
+
+
+	if (movimento == TECLA_GAMEPLAY_ACAO_CAPTURAR)
+	{
+
+	}
+
+	if (movimento == TECLA_GAMEPLAY_ACAO_SOLTAR)
+	{
+
+	}
+
+	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_RIGHT)
 	{
 		if (globalColunaPonteiro >= 0 && globalColunaPonteiro < 7)
 		{
@@ -208,7 +236,7 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 	}
 
 
-	if (movimento == 4)
+	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_LEFT)
 	{
 		if (globalColunaPonteiro > 0 && globalColunaPonteiro <= 7)
 		{
@@ -220,7 +248,7 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 	}
 
 
-	if (movimento == 8)
+	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_UP)
 	{
 		if (globalLinhaPonteiro > 0 && globalLinhaPonteiro <= 7)
 		{
@@ -232,7 +260,7 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 	}
 
 
-	if (movimento == 2)
+	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_DOWN)
 	{
 		if (globalLinhaPonteiro >= 0 && globalLinhaPonteiro < 7)
 		{
@@ -253,27 +281,27 @@ int CapturaTeclado() {
 		{
 			//DIRECIONAIS
 			if (msg.lParam == 2490368)
-				return 8;
+				return TECLA_GAMEPLAY_DIRECIONAL_UP;
 			if (msg.lParam == 2621440)
-				return 2;
+				return TECLA_GAMEPLAY_DIRECIONAL_DOWN;
 			if (msg.lParam == 2424832)
-				return 4;
+				return TECLA_GAMEPLAY_DIRECIONAL_LEFT;
 			if (msg.lParam == 2555904)
-				return 6;
+				return TECLA_GAMEPLAY_DIRECIONAL_RIGHT;
 
 			//ACOES
-			if (msg.lParam == 7340032)//CAPTURAR 
-				return 5;
-			if (msg.lParam == 7405568)//SOLTAR
-				return 3;
+			if (msg.lParam == 7340032)
+				return TECLA_GAMEPLAY_ACAO_CAPTURAR;
+			if (msg.lParam == 7405568)
+				return TECLA_GAMEPLAY_ACAO_SOLTAR;
 
 			//TECLA MENU
-			if (msg.lParam == 6356992)//OPCAO JOGAR 
-				return 1;
-			if (msg.lParam == 6422528)//OPCAO TUTORIAL
-				return 2;
-			if (msg.lParam == 6488064)//OPCAO SAIR
-				return 3;
+			if (msg.lParam == 6356992)
+				return TECLA_MENU_OPCAO_JOGAR;
+			if (msg.lParam == 6422528)
+				return TECLA_MENU_OPCAO_TUTORIAL;
+			if (msg.lParam == 6488064)
+				return TECLA_MENU_OPCAO_SAIR;
 		}
 	}
 }
@@ -293,11 +321,11 @@ int main() {
 
 		switch (teclaDirecional) {
 
-			case 1:
+			case TECLA_MENU_OPCAO_JOGAR:
 				system("cls");
 
 				//inicio ponteiro em 0,0
-				movimentacaoNoTabuleiroBackEnd(matriz, 0);
+				movimentacaoNoTabuleiroBackEnd(matriz, TECLA_MARCADOR_INICIAL);
 
 				while (true) {
 					tabuleiroDamaUserIterface(matriz);
@@ -307,14 +335,14 @@ int main() {
 				system("pause");
 			break;
 
-			case 2:
+			case TECLA_MENU_OPCAO_TUTORIAL:
 				system("cls");
 				ImprimeTutorial();
 				system("pause");
 				system("cls");
 			break;
 
-			case 3:
+			case TECLA_MENU_OPCAO_SAIR:
 				sair = true;
 			break;
 		}
