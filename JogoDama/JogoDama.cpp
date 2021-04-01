@@ -78,7 +78,7 @@ void intro() {
 	
 }
 
-void ImprimeTutorial()
+void imprimeTutorial()
 {
 	system("cls");
 	printf("##### Tutorial DamaBreuva ######");
@@ -239,7 +239,7 @@ char** organizaTabuleiroBackEndIncial() {
 	return matriz;
 }
 
-void PegaPeca(char** tabuleiroBackEnd) {
+void pegaPeca(char** tabuleiroBackEnd) {
 
 	if (globalPecaBackupDoPonteiro != ' ' && globalPecaCapturada == ' ')
 	{
@@ -255,7 +255,7 @@ void PegaPeca(char** tabuleiroBackEnd) {
 	}
 }
 
-void jogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
+void validaJogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 
 	//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A DIREITA, AVANÇANDO O TABULEIRO
 	if ((globalLinhaPecaCapturada + 2) == globalLinhaPonteiro && (globalColunaPecaCapturada + 2) == globalColunaPonteiro) {
@@ -386,7 +386,7 @@ void validarMovimentoPecaPreta(char** tabuleiroBackEnd) {
 			globalPecaCapturada = ' ';
 		}
 
-		jogadaParaEliminarPecaInimiga(tabuleiroBackEnd);
+		validaJogadaParaEliminarPecaInimiga(tabuleiroBackEnd);
 	}
 
 }
@@ -435,7 +435,7 @@ void validarMovimentoPecaBranca(char** tabuleiroBackEnd) {
 		}
 	}
 
-	jogadaParaEliminarPecaInimiga(tabuleiroBackEnd);
+	validaJogadaParaEliminarPecaInimiga(tabuleiroBackEnd);
 }
 
 void soltaPecaJogador(char** tabuleiroBackEnd) {
@@ -508,7 +508,7 @@ void movimentacaoNoTabuleiroBackEnd(char** tabuleiroBackEnd, int movimento) {
 	}
 
 	if (movimento == TECLA_GAMEPLAY_ACAO_CAPTURAR)
-		PegaPeca(tabuleiroBackEnd);
+		pegaPeca(tabuleiroBackEnd);
 	
 	if (movimento == TECLA_GAMEPLAY_ACAO_SOLTAR)
 		soltaPecaJogador(tabuleiroBackEnd);
@@ -530,7 +530,7 @@ void movimentacaoNoTabuleiroBackEnd(char** tabuleiroBackEnd, int movimento) {
 
 }
 
-int CapturaTeclado() {
+int capturaTeclado() {
 	MSG msg = { 0 };
 
 	while (GetMessage(&msg, NULL, 0, 0) != 0)
@@ -579,7 +579,7 @@ int main() {
 	while (teclaDirecional != TECLA_MENU_OPCAO_SAIR) {
 		//system("color A");
 		intro();
-		teclaDirecional = CapturaTeclado();
+		teclaDirecional = capturaTeclado();
 
 		switch (teclaDirecional) {
 
@@ -590,14 +590,14 @@ int main() {
 
 				while (teclaDirecional != TECLA_GAMEPLAY_ACAO_SAIR_DO_JOGO) {
 					tabuleiroUserIterface(tabuleiroBackEnd);
-					teclaDirecional = CapturaTeclado();
+					teclaDirecional = capturaTeclado();
 					movimentacaoNoTabuleiroBackEnd(tabuleiroBackEnd, teclaDirecional);
 				}
 
 			break;
 
 			case TECLA_MENU_OPCAO_TUTORIAL:
-				ImprimeTutorial();
+				imprimeTutorial();
 			break;
 
 			default:
