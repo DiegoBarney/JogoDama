@@ -21,7 +21,8 @@
 #define TECLA_GAMEPLAY_ACAO_SOLTAR 33
 #define TECLA_GAMEPLAY_ACAO_CANCELAR_JOGADA 11
 #define TECLA_GAMEPLAY_ACAO_SAIR_DO_JOGO 118
-#define TECLA_MARCADOR_INICIAL 0
+
+#define TABULEIRO_PONTEIRO_INICIAL 0
 
 struct dados_jogador
 {
@@ -30,11 +31,20 @@ struct dados_jogador
 	bool vencedor = false;
 };
 
-int globalLinhaPonteiro = 0, globalColunaPonteiro = 0;
+//Variavel global do ponteiro do jogo comandado pelo direcional
+int globalLinhaPonteiro = 0, 
+	globalColunaPonteiro = 0;
 char globalPecaBackupDoPonteiro = ' ';
-int globalLinhaPecaCapturada = 0, globalColunaPecaCapturada = 0;
+
+//Variavel global da peca selecionada pelo player
+int globalLinhaPecaCapturada = 0, 
+	globalColunaPecaCapturada = 0;
+
 char globalPecaCapturada = ' ';
-int globalPlacarPretas = 0, globalPlacarBrancas = 0;
+
+//Variavel global do placar do jogo
+int globalPlacarPretas = 0, 
+	globalPlacarBrancas = 0;
 
 void registraTeclasDoJogo()
 {
@@ -68,6 +78,7 @@ void intro() {
 
 void ImprimeTutorial()
 {
+	system("cls");
 	printf("##### Tutorial DamaBreuva ######");
 
 	printf("\n\nControles do Jogo:\n");
@@ -101,9 +112,11 @@ void ImprimeTutorial()
 	printf("T = Ponteiro onde o jogador esta localizado na movimentacão.\n\n");
 }
 
-void tabuleiroDamaUserIterface(char** tabuleiroBackEnd) {
+void tabuleiroUserIterface(char** tabuleiroBackEnd) {
 	int descontoLinhasInterfaceMatriz = 0;
+
 	system("cls");
+
 	printf("F1 - Pega a peca  ||  F2 - Solta a peca || F3 - Cancela a jogada || F9 - SAIR DO JOGO || Direcionais - Movimenta \n");
 
 	printf("________________________________________________________________________________\n");
@@ -153,11 +166,21 @@ void tabuleiroDamaUserIterface(char** tabuleiroBackEnd) {
 	}
 	printf("\n________________________________________________________________________________\n");
 	printf("\nPlacar PRETAS: %d", globalPlacarPretas);
-	printf("\nPlacar BRANCAS: %d                          ", globalPlacarBrancas);
+	printf("\nPlacar BRANCAS: %d\n", globalPlacarBrancas);
 }
 
 char** organizaTabuleiroBackEndIncial() {
 	char** matriz = NULL;
+
+
+	globalLinhaPonteiro = 0,
+	globalColunaPonteiro = 0;
+	globalPecaBackupDoPonteiro = ' ';
+	globalLinhaPecaCapturada = 0,
+	globalColunaPecaCapturada = 0;
+	globalPecaCapturada = ' ';
+	globalPlacarPretas = 0,
+	globalPlacarBrancas = 0;
 
 	matriz = (char**)malloc(LINHAS * sizeof(char*));
 
@@ -524,7 +547,7 @@ void cancelaJogada(char** tabuleiroBackEnd) {
 void movimentacaoNoTabuleiroBackEnd(char** tabuleiroBackEnd, int movimento) {
 
 
-	if (movimento == TECLA_MARCADOR_INICIAL)
+	if (movimento == TABULEIRO_PONTEIRO_INICIAL)
 	{
 		globalPecaBackupDoPonteiro = tabuleiroBackEnd[globalLinhaPonteiro][globalColunaPonteiro];
 		tabuleiroBackEnd[globalLinhaPonteiro][globalColunaPonteiro] = '*';
@@ -592,50 +615,40 @@ int CapturaTeclado() {
 }
 
 int main() {
-	char** matriz; 
+	char** tabuleiroBackEnd; 
 	int teclaDirecional = 0;
-	bool sair = false;
 
 	registraTeclasDoJogo();
-	matriz = organizaTabuleiroBackEndIncial();
 
-	while (sair == false) {
+	while (teclaDirecional != TECLA_MENU_OPCAO_SAIR) {
+
 		intro();
-
 		teclaDirecional = CapturaTeclado();
 
 		switch (teclaDirecional) {
 
 			case TECLA_MENU_OPCAO_JOGAR:
-				system("cls");
 
-				//inicio ponteiro em 0,0
-				movimentacaoNoTabuleiroBackEnd(matriz, TECLA_MARCADOR_INICIAL);
+				tabuleiroBackEnd = organizaTabuleiroBackEndIncial();
+				movimentacaoNoTabuleiroBackEnd(tabuleiroBackEnd, TABULEIRO_PONTEIRO_INICIAL);
 
 				while (teclaDirecional != TECLA_GAMEPLAY_ACAO_SAIR_DO_JOGO) {
-					tabuleiroDamaUserIterface(matriz);
+					tabuleiroUserIterface(tabuleiroBackEnd);
 					teclaDirecional = CapturaTeclado();
-					movimentacaoNoTabuleiroBackEnd(matriz, teclaDirecional);
+					movimentacaoNoTabuleiroBackEnd(tabuleiroBackEnd, teclaDirecional);
 				}
-				system("pause");
+
 			break;
 
 			case TECLA_MENU_OPCAO_TUTORIAL:
-				system("cls");
 				ImprimeTutorial();
-				system("pause");
-				system("cls");
-			break;
-
-			case TECLA_MENU_OPCAO_SAIR:
-				sair = true;
 			break;
 
 			default:
 				break;
 		}
-	}
 
-	system("pause");
+		system("pause");
+	}
 }
 
