@@ -260,7 +260,8 @@ void validaJogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 	//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A DIREITA, AVANÇANDO O TABULEIRO
 	if ((globalLinhaPecaCapturada + 2) == globalLinhaPonteiro && (globalColunaPecaCapturada + 2) == globalColunaPonteiro) {
 
-		if (tabuleiroBackEnd[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada + 1] != ' ') {
+		if ( (tabuleiroBackEnd[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada + 1] == 'B' && globalPecaCapturada == 'P') ||
+			 (tabuleiroBackEnd[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada + 1] == 'P' && globalPecaCapturada == 'B') ) {
 
 			//ELIMINO PECA INIMIGA (BRANCA), 'TO DO' FAZER UM PLACAR
 			tabuleiroBackEnd[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada + 1] = ' ';
@@ -287,7 +288,8 @@ void validaJogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 	//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A ESQUERDA, AVANÇANDO O TABULEIRO
 	if ((globalLinhaPecaCapturada + 2) == globalLinhaPonteiro && (globalColunaPecaCapturada - 2) == globalColunaPonteiro) {
 
-		if (tabuleiroBackEnd[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada - 1] != ' ') {
+		if ( (tabuleiroBackEnd[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada - 1] == 'B' && globalPecaCapturada == 'P') ||
+			 (tabuleiroBackEnd[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada - 1] == 'P' && globalPecaCapturada == 'B') ) {
 
 			//ELIMINO PECA INIMIGA (BRANCA), 'TO DO' FAZER UM PLACAR
 			tabuleiroBackEnd[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada - 1] = ' ';
@@ -310,11 +312,11 @@ void validaJogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 		}
 	}
 
-
 	//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A ESQUERDA, RETROCEDENDO O TABULEIRO
 	if ((globalLinhaPecaCapturada - 2) == globalLinhaPonteiro && (globalColunaPecaCapturada - 2) == globalColunaPonteiro) {
 
-		if (tabuleiroBackEnd[globalLinhaPecaCapturada - 1][globalColunaPecaCapturada - 1] != ' ') {
+		if ( (tabuleiroBackEnd[globalLinhaPecaCapturada - 1][globalColunaPecaCapturada - 1] == 'B' && globalPecaCapturada == 'P') ||
+			 (tabuleiroBackEnd[globalLinhaPecaCapturada - 1][globalColunaPecaCapturada - 1] == 'P' && globalPecaCapturada == 'B') ) {
 
 			//ELIMINO PECA INIMIGA (BRANCA), 'TO DO' FAZER UM PLACAR
 			tabuleiroBackEnd[globalLinhaPecaCapturada - 1][globalColunaPecaCapturada - 1] = ' ';
@@ -340,7 +342,8 @@ void validaJogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 	//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A DIREITA, RETROCEDENDO O TABULEIRO
 	if ((globalLinhaPecaCapturada - 2) == globalLinhaPonteiro && (globalColunaPecaCapturada + 2) == globalColunaPonteiro) {
 
-		if (tabuleiroBackEnd[globalLinhaPecaCapturada - 1][globalColunaPecaCapturada + 1] != ' ') {
+		if ( (tabuleiroBackEnd[globalLinhaPecaCapturada - 1][globalColunaPecaCapturada + 1] == 'B' && globalPecaCapturada == 'P') ||
+			 (tabuleiroBackEnd[globalLinhaPecaCapturada - 1][globalColunaPecaCapturada + 1] == 'P' && globalPecaCapturada == 'B') ) {
 
 			//ELIMINO PECA INIMIGA (BRANCA), 'TO DO' FAZER UM PLACAR
 			tabuleiroBackEnd[globalLinhaPecaCapturada - 1][globalColunaPecaCapturada + 1] = ' ';
