@@ -203,36 +203,47 @@ char** organizaTabuleiroBackEndIncial() {
 	return matriz;
 }
 
-void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
+void PegaPeca(char** matriz) {
 
-	if (movimento == TECLA_MARCADOR_INICIAL)
+	if (globalPecaBackupDoPonteiro != ' ')
 	{
-		globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
-		matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+		//CAPTURO PECA
+		globalPecaCapturada = globalPecaBackupDoPonteiro;
+
+		//ADICIONO O NO LOCAL 
+		globalPecaBackupDoPonteiro = 'C';
+
+		//GUARDO A LOCALIZACAO DA PECA ANTERIOR
+		globalLinhaPecaCapturada = globalLinhaPonteiro;
+		globalColunaPecaCapturada = globalColunaPonteiro;
 	}
+}
 
-	if (movimento == TECLA_GAMEPLAY_ACAO_CAPTURAR)
+void validarMovimentoPecaPreta(char** matriz) {
+
+	//VERIFICO SE O lOCAL ATUAL PARA SOLTAR PECA TEM QUE ESTAR VAZIO
+	if (globalPecaBackupDoPonteiro == ' ')
 	{
-		if (globalPecaBackupDoPonteiro != ' ')
-		{
-			//CAPTURO PECA
-			globalPecaCapturada = globalPecaBackupDoPonteiro;
+		//VERIFICO SE AS JOGADAS ESTAO SENDO NAS DIAGONAIS
+		if ((globalLinhaPecaCapturada + 1) == globalLinhaPonteiro && (globalColunaPecaCapturada + 1) == globalColunaPonteiro ||
+			(globalLinhaPecaCapturada + 1) == globalLinhaPonteiro && (globalColunaPecaCapturada - 1) == globalColunaPonteiro) {
 
-			//ADICIONO O NO LOCAL 
-			globalPecaBackupDoPonteiro = 'C';
+			//RETIRO A PECA DO LOCAL ANTERIOR 
+			matriz[globalLinhaPecaCapturada][globalColunaPecaCapturada] = ' ';
 
-			//GUARDO A LOCALIZACAO DA PECA ANTERIOR
-			globalLinhaPecaCapturada = globalLinhaPonteiro;
-			globalColunaPecaCapturada = globalColunaPonteiro;
+			//SOLTO A PECA NO NOVO LOCAL
+			matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaCapturada;
 
+			//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
+			globalPecaBackupDoPonteiro = globalPecaCapturada;
 		}
-	}
 
-	if (movimento == TECLA_GAMEPLAY_ACAO_SOLTAR)
-	{
-		//VERIFICO SE O lOCAL ATUAL PARA SOLTAR PECA TEM QUE ESTAR VAZIO
-		if (globalPecaBackupDoPonteiro == ' ')
-		{
+		//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A DIREITA
+		if ((globalLinhaPecaCapturada + 2) == globalLinhaPonteiro && (globalColunaPecaCapturada + 2) == globalColunaPonteiro) {
+
+			if (matriz[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada + 1] == 'B') {
+				matriz[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada + 1] = ' ';//PECA ELIMINADA, 'TO DO' FAZER UM PLACAR
+
 				//RETIRO A PECA DO LOCAL ANTERIOR 
 				matriz[globalLinhaPecaCapturada][globalColunaPecaCapturada] = ' ';
 
@@ -241,52 +252,131 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 
 				//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 				globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+			}
+
+		}
+
+		//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A ESQUERDA
+		if ((globalLinhaPecaCapturada + 2) == globalLinhaPonteiro && (globalColunaPecaCapturada - 2) == globalColunaPonteiro) {
+
+			if (matriz[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada - 1] == 'B') {
+				matriz[globalLinhaPecaCapturada + 1][globalColunaPecaCapturada + 1] = ' ';//PECA ELIMINADA, 'TO DO' FAZER UM PLACAR
+
+				//RETIRO A PECA DO LOCAL ANTERIOR 
+				matriz[globalLinhaPecaCapturada][globalColunaPecaCapturada] = ' ';
+
+				//SOLTO A PECA NO NOVO LOCAL
+				matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaCapturada;
+
+				//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
+				globalPecaBackupDoPonteiro = globalPecaCapturada;
+			}
+		}
+
+	}
+
+}
+
+void validarMovimentoPecaBranca(char** matriz) {
+
+	//VERIFICO SE O lOCAL ATUAL PARA SOLTAR PECA TEM QUE ESTAR VAZIO
+	if (globalPecaBackupDoPonteiro == ' ')
+	{
+		//VERIFICO SE AS JOGADAS ESTAO SENDO NAS DIAGONAIS
+		if ((globalLinhaPecaCapturada - 1) == globalLinhaPonteiro && (globalColunaPecaCapturada + 1) == globalColunaPonteiro ||
+			(globalLinhaPecaCapturada - 1) == globalLinhaPonteiro && (globalColunaPecaCapturada - 1) == globalColunaPonteiro) {
+
+			//RETIRO A PECA DO LOCAL ANTERIOR 
+			matriz[globalLinhaPecaCapturada][globalColunaPecaCapturada] = ' ';
+
+			//SOLTO A PECA NO NOVO LOCAL
+			matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaCapturada;
+
+			//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
+			globalPecaBackupDoPonteiro = globalPecaCapturada;
 		}
 	}
+}
+
+void soltaPecaJogador(char** matriz) {
+
+	if (globalPecaCapturada == 'P')
+		validarMovimentoPecaPreta(matriz);
+
+	if (globalPecaCapturada == 'B')
+		validarMovimentoPecaBranca(matriz);
+
+	/*TO DO, PECAS RAINHAS*/
+}
+
+void moveParaDireita(char** matriz) {
+
+	if (globalColunaPonteiro >= 0 && globalColunaPonteiro < 7)
+	{
+		matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
+		globalColunaPonteiro++;
+		globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
+		matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+	}
+}
+
+void moveParaEsquerda(char** matriz) {
+	if (globalColunaPonteiro > 0 && globalColunaPonteiro <= 7)
+	{
+		matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
+		globalColunaPonteiro--;
+		globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
+		matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+	}
+}
+
+void moveParaCima(char** matriz) {
+	if (globalLinhaPonteiro > 0 && globalLinhaPonteiro <= 7)
+	{
+		matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
+		globalLinhaPonteiro--;
+		globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
+		matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+	}
+}
+
+void moveParaBaixo(char** matriz) {
+	if (globalLinhaPonteiro >= 0 && globalLinhaPonteiro < 7)
+	{
+		matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
+		globalLinhaPonteiro++;
+		globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
+		matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+	}
+}
+
+void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
+
+
+	if (movimento == TECLA_MARCADOR_INICIAL)
+	{
+		globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
+		matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
+	}
+
+	if (movimento == TECLA_GAMEPLAY_ACAO_CAPTURAR)
+		PegaPeca(matriz);
+	
+	if (movimento == TECLA_GAMEPLAY_ACAO_SOLTAR)
+		soltaPecaJogador(matriz);
 
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_RIGHT)
-	{
-		if (globalColunaPonteiro >= 0 && globalColunaPonteiro < 7)
-		{
-			matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
-			globalColunaPonteiro++;
-			globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
-			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
-		}
-	}
+		moveParaDireita(matriz);
 
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_LEFT)
-	{
-		if (globalColunaPonteiro > 0 && globalColunaPonteiro <= 7)
-		{
-			matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
-			globalColunaPonteiro--;
-			globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
-			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
-		}
-	}
+		moveParaEsquerda(matriz);
 
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_UP)
-	{
-		if (globalLinhaPonteiro > 0 && globalLinhaPonteiro <= 7)
-		{
-			matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
-			globalLinhaPonteiro--;
-			globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
-			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
-		}
-	}
+		moveParaCima(matriz);
 
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_DOWN)
-	{
-		if (globalLinhaPonteiro >= 0 && globalLinhaPonteiro < 7)
-		{
-			matriz[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaBackupDoPonteiro;
-			globalLinhaPonteiro++;
-			globalPecaBackupDoPonteiro = matriz[globalLinhaPonteiro][globalColunaPonteiro];
-			matriz[globalLinhaPonteiro][globalColunaPonteiro] = 'T';
-		}
-	}
+		moveParaBaixo(matriz);
 }
 
 int CapturaTeclado() {
