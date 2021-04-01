@@ -47,6 +47,7 @@ void registraTeclasDoJogo()
 	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x25);//DIRECIONAL PARA ESQUERDA
 	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x70);//F1 = CAPTURA A PECA
 	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x71);//F2 = SOLTA A PECA
+	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x72);//F3 = CANCELAR JOGADA
 	
 	//TECLAS DE MENU
 	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x61);//FUNCAO NUMERO 1
@@ -56,7 +57,7 @@ void registraTeclasDoJogo()
 
 void intro() {
 
-
+	system("cls");
 	printf("############ Bem vindo ao jogo DamaBreuva!!! ############\n\n");
 	printf("Pressione a tecla numero 1 para Comecar a jogar\n");
 	printf("Pressione a tecla numero 2 para acessar o tutorial do jogo\n");
@@ -74,6 +75,7 @@ void ImprimeTutorial()
 	printf("Direcional para direita.\n");
 	printf("F1 Seleciona Peca.\n");
 	printf("F2 Solta Peca.\n");
+	printf("F3 Cancelar Jogada, volta a peca que estava movimentando para sua posicao original.\n");
 
 	printf("\n\nMovimentacao no tabuleiro:\n");
 	printf("Direcional para cima.\n");
@@ -92,15 +94,16 @@ void ImprimeTutorial()
 	printf("B = Peca Branca.\n");
 	printf("W = Peca Branca Dama.\n");
 	printf("X = Peca Preta Dama.\n");
+	printf("C = Posicao onde foi capturada a Peca.\n");
 	printf("T = Ponteiro onde o jogador esta localizado na movimentacão.\n\n");
 }
 
 void tabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
 	int descontoLinhasInterfaceMatriz = 0;
 	system("cls");
-	printf("Placar Pontuacao pecas PRETAS: %d \n", globalPlacarPretas);
-	printf("Placar Pontuacao pecas BRANCAS: %d \n", globalPlacarBrancas);
-	printf("\n");
+	printf("F1 - Pega a peca  ||  F2 - Solta a peca || F3 - Cancela a jogada || Direcionais - Movimenta \n");
+
+	printf("________________________________________________________________________________\n");
 	for (int linhasInterface = 1; linhasInterface <= TAM_LINHAS_INTERFACE; linhasInterface++) {
 		printf("\n");
 
@@ -145,7 +148,9 @@ void tabuleiroDamaUserIterface(char** matrizJogoPreenchida) {
 			}
 		}
 	}
-	printf("\n\n\n");
+	printf("\n________________________________________________________________________________\n");
+	printf("\nPlacar PRETAS: %d", globalPlacarPretas);
+	printf("\nPlacar BRANCAS: %d                          ", globalPlacarBrancas);
 }
 
 char** organizaTabuleiroBackEndIncial() {
@@ -209,7 +214,7 @@ char** organizaTabuleiroBackEndIncial() {
 
 void PegaPeca(char** matriz) {
 
-	if (globalPecaBackupDoPonteiro != ' ')
+	if (globalPecaBackupDoPonteiro != ' ' && globalPecaCapturada == ' ')
 	{
 		//CAPTURO PECA
 		globalPecaCapturada = globalPecaBackupDoPonteiro;
@@ -240,6 +245,8 @@ void validarMovimentoPecaPreta(char** matriz) {
 
 			//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+			globalPecaCapturada = ' ';
 		}
 
 		//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A DIREITA, AVANÇANDO O TABULEIRO
@@ -259,6 +266,8 @@ void validarMovimentoPecaPreta(char** matriz) {
 
 				//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 				globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+				globalPecaCapturada = ' ';
 			}
 
 		}
@@ -280,6 +289,8 @@ void validarMovimentoPecaPreta(char** matriz) {
 
 				//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 				globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+				globalPecaCapturada = ' ';
 			}
 		}
 
@@ -301,6 +312,8 @@ void validarMovimentoPecaPreta(char** matriz) {
 
 				//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 				globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+				globalPecaCapturada = ' ';
 			}
 		}
 
@@ -321,6 +334,8 @@ void validarMovimentoPecaPreta(char** matriz) {
 
 				//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 				globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+				globalPecaCapturada = ' ';
 			}
 		}
 
@@ -345,9 +360,10 @@ void validarMovimentoPecaBranca(char** matriz) {
 
 			//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+			globalPecaCapturada = ' ';
 		}
 	}
-
 
 	//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A DIREITA, AVANCANDO O TABULEIRO
 	if ((globalLinhaPecaCapturada - 2) == globalLinhaPonteiro && (globalColunaPecaCapturada + 2) == globalColunaPonteiro) {
@@ -366,6 +382,8 @@ void validarMovimentoPecaBranca(char** matriz) {
 
 			//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+			globalPecaCapturada = ' ';
 		}
 	}
 
@@ -387,6 +405,8 @@ void validarMovimentoPecaBranca(char** matriz) {
 
 			//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+			globalPecaCapturada = ' ';
 		}
 	}
 
@@ -408,6 +428,8 @@ void validarMovimentoPecaBranca(char** matriz) {
 
 			//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+			globalPecaCapturada = ' ';
 		}
 	}
 
@@ -428,6 +450,8 @@ void validarMovimentoPecaBranca(char** matriz) {
 
 			//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
+
+			globalPecaCapturada = ' ';
 		}
 
 	}
@@ -486,6 +510,14 @@ void moveParaBaixo(char** matriz) {
 	}
 }
 
+void cancelaJogada(char** matriz) {
+
+	if (globalPecaCapturada != ' '){
+		matriz[globalLinhaPecaCapturada][globalColunaPecaCapturada] = globalPecaCapturada;
+		globalPecaCapturada = ' ';
+	}
+}
+
 void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 
 
@@ -501,6 +533,9 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 	if (movimento == TECLA_GAMEPLAY_ACAO_SOLTAR)
 		soltaPecaJogador(matriz);
 
+	if (movimento == TECLA_GAMEPLAY_ACAO_CANCELAR_JOGADA)
+		cancelaJogada(matriz);
+
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_RIGHT)
 		moveParaDireita(matriz);
 
@@ -512,6 +547,7 @@ void movimentacaoNoTabuleiroBackEnd(char** matriz, int movimento) {
 
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_DOWN)
 		moveParaBaixo(matriz);
+
 }
 
 int CapturaTeclado() {
@@ -536,6 +572,8 @@ int CapturaTeclado() {
 				return TECLA_GAMEPLAY_ACAO_CAPTURAR;
 			if (msg.lParam == 7405568)
 				return TECLA_GAMEPLAY_ACAO_SOLTAR;
+			if (msg.lParam == 7471104)
+				return TECLA_GAMEPLAY_ACAO_CANCELAR_JOGADA;
 
 			//TECLA MENU
 			if (msg.lParam == 6356992)
@@ -587,6 +625,9 @@ int main() {
 			case TECLA_MENU_OPCAO_SAIR:
 				sair = true;
 			break;
+
+			default:
+				break;
 		}
 	}
 
