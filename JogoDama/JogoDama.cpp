@@ -416,28 +416,6 @@ void validarMovimentoPecaBranca(char** tabuleiroBackEnd) {
 		}
 	}
 
-	//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A DIREITA, AVANCANDO O TABULEIRO
-	if ((globalLinhaPecaCapturada - 2) == globalLinhaPonteiro && (globalColunaPecaCapturada + 2) == globalColunaPonteiro) {
-
-		if (tabuleiroBackEnd[globalLinhaPecaCapturada - 1][globalColunaPecaCapturada + 1] == 'P') {
-
-			//ELIMINO PECA INIMIGA (PRETA), 'TO DO' FAZER UM PLACAR
-			tabuleiroBackEnd[globalLinhaPecaCapturada - 1][globalColunaPecaCapturada + 1] = ' ';
-			globalPlacarBrancas++;
-
-			//RETIRO A PECA DO LOCAL ANTERIOR 
-			tabuleiroBackEnd[globalLinhaPecaCapturada][globalColunaPecaCapturada] = ' ';
-
-			//SOLTO A PECA NO NOVO LOCAL
-			tabuleiroBackEnd[globalLinhaPonteiro][globalColunaPonteiro] = globalPecaCapturada;
-
-			//VOLTO O BACKUP DE PECA ONDE O PONTEIRO ESTA LOCALIZADO
-			globalPecaBackupDoPonteiro = globalPecaCapturada;
-
-			globalPecaCapturada = ' ';
-		}
-	}
-
 	validaJogadaParaEliminarPecaInimiga(tabuleiroBackEnd);
 }
 
