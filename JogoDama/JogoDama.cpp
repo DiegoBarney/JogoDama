@@ -24,6 +24,9 @@
 
 #define TABULEIRO_PONTEIRO_INICIAL 0
 
+#define ANSI_COLOR_RED      "\x1b[31m" //cores em ANSI utilizadas 
+#define ANSI_COLOR_GRAY     "\e[0;37m"
+
 struct dados_jogador
 {
 	char nome[50];
@@ -68,12 +71,12 @@ void registraTeclasDoJogo()
 }
 
 void intro() {
-
 	system("cls");
-	printf("############ Bem vindo ao jogo DamaBreuva!!! ############\n\n");
+	printf("\x1b[37m ############ Bem vindo ao jogo \x1b[31m DamaBreuva\x1b[37m !!! ############\n\n");
 	printf("Pressione a tecla numero 1 para Comecar a jogar\n");
 	printf("Pressione a tecla numero 2 para acessar o tutorial do jogo\n");
 	printf("Pressione a tecla numero 3 para Sair\n");
+	
 }
 
 void ImprimeTutorial()
@@ -117,15 +120,15 @@ void tabuleiroUserIterface(char** tabuleiroBackEnd) {
 
 	system("cls");
 
-	printf("F1 - Pega a peca  ||  F2 - Solta a peca || F3 - Cancela a jogada || F9 - SAIR DO JOGO || Direcionais - Movimenta \n");
+	printf("\x1b[37mF1 - \x1b[32mPEGA A PECA  ||  \x1b[37mF2 - \x1b[32mSOLTA A PECA || \x1b[37mF3 - \x1b[32mCANCELA JOGADA || \x1b[37mF9 - \x1b[32mSAIR DO JOGO || \x1b[37mDirecionais - \x1b[32mMovimenta \n");
 
-	printf("________________________________________________________________________________\n");
+	printf("\x1b[31m________________________________________________________________________________\n");
 	for (int linhasInterface = 1; linhasInterface <= TAM_LINHAS_INTERFACE; linhasInterface++) {
 		printf("\n");
 
 		if (linhasInterface % 2 == 0)
 		{
-			printf("________________________________________________________________________________\n");
+			printf("\x1b[31m________________________________________________________________________________\n");
 		}
 		else {
 
@@ -134,39 +137,39 @@ void tabuleiroUserIterface(char** tabuleiroBackEnd) {
 			for (int colunasInterface = 0; colunasInterface < TAM_COLUNAS_INTERFACE; colunasInterface++)
 			{
 				if (linhasInterface == 1) {
-						printf("    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("\x1b[37m    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else if (linhasInterface == 3) {
-						printf("    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("\x1b[37m    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else if (linhasInterface == 5) {
-						printf("    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("\x1b[37m    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else if (linhasInterface == 11) {
 
-						printf("    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("\x1b[37m    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else if (linhasInterface == 13) {
 
-						printf("    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("\x1b[37m    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else if (linhasInterface == 15) {
 
-						printf("    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+						printf("\x1b[37m    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 				else {
-					printf("    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
+					printf("\x1b[37m    %c    ", tabuleiroBackEnd[linhasInterface - descontoLinhasInterfaceMatriz][colunasInterface]);
 				}
 
 				if (colunasInterface < 8) {
-					printf("|");
+					printf("\x1b[31m|");
 				}
 			}
 		}
 	}
-	printf("\n________________________________________________________________________________\n");
-	printf("\nPlacar PRETAS: %d", globalPlacarPretas);
-	printf("\nPlacar BRANCAS: %d\n", globalPlacarBrancas);
+	printf("\n\x1b[31m________________________________________________________________________________\n");
+	printf("\n\x1b[32mPlacar PRETAS:\x1b[37m %d", globalPlacarPretas);
+	printf("\n\x1b[32mPlacar BRANCAS:\x1b[37m %d\n", globalPlacarBrancas);
 }
 
 char** organizaTabuleiroBackEndIncial() {
@@ -621,7 +624,7 @@ int main() {
 	registraTeclasDoJogo();
 
 	while (teclaDirecional != TECLA_MENU_OPCAO_SAIR) {
-
+		//system("color A");
 		intro();
 		teclaDirecional = CapturaTeclado();
 
