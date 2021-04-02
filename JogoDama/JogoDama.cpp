@@ -26,6 +26,13 @@
 
 #define TABULEIRO_PONTEIRO_INICIAL 0
 
+#define AVISOS_MOVIMENTO_INVALIDO_POSICAO_OCUPADA " MOVIMENTO DE PECA INVALIDO, ESTA POSICAO JA ESTA OCUPADA."
+#define AVISOS_MOVIMENTO_INVALIDO_POSICAO_ERRADA  " MOVIMENTO DE PECA INVALIDO, ESTA PECA NAO PODE FAZER ESTE MOVIMENTO"
+#define AVISOS_MOVIMENTAR_PECA_BRANCA " MOVIMENTO DE PECA INVALIDO, VOCE DEVE MOVIMENTAR AS PECAS BRANCAS"
+#define AVISOS_MOVIMENTAR_PECA_PRETA " MOVIMENTO DE PECA INVALIDO, VOCE DEVE MOVIMENTAR AS PECAS PRETAS"
+#define AVISOS_MOVIMENTAR_SEM_PECA " MOVIMENTO DE PECA INVALIDO, VOCE ESTA TENTANDO CAPTURAR UMA CASA SEM PECA"
+#define AVISOS_SEM_AVISOS " "
+
 struct dados_jogador
 {
 	char nome[50];
@@ -47,6 +54,11 @@ char globalPecaCapturada = ' ';
 //Variavel global do placar do jogo
 int globalPlacarPretas = 0, 
 	globalPlacarBrancas = 0;
+
+//Variavel global de avisos do jogo para o player
+char globalAvisos[1000] = {' '};
+
+char globalPecaDeveJogarAgora = 'B';
 
 void registraTeclasDoJogo()
 {
@@ -167,8 +179,9 @@ void tabuleiroUserIterface(char** tabuleiroBackEnd) {
 		}
 	}
 	printf("\n\x1b[31m________________________________________________________________________________\n");
-	printf("\n\x1b[32mPlacar PRETAS:\x1b[37m %d", globalPlacarPretas);
+	printf("\x1b[32mPlacar PRETAS:\x1b[37m %d", globalPlacarPretas);
 	printf("\n\x1b[32mPlacar BRANCAS:\x1b[37m %d\n", globalPlacarBrancas);
+	printf("\x1b[32mAVISOS:\x1b[37m %s", globalAvisos);
 }
 
 char** organizaTabuleiroBackEndIncial() {
@@ -241,17 +254,28 @@ char** organizaTabuleiroBackEndIncial() {
 
 void pegaPeca(char** tabuleiroBackEnd) {
 
-	if (globalPecaBackupDoPonteiro != ' ' && globalPecaCapturada == ' ')
+	if (globalPecaDeveJogarAgora == globalPecaBackupDoPonteiro)
 	{
-		//CAPTURO PECA
-		globalPecaCapturada = globalPecaBackupDoPonteiro;
+		if (globalPecaBackupDoPonteiro != ' ' && globalPecaCapturada == ' ')
+		{
+			//CAPTURO PECA
+			globalPecaCapturada = globalPecaBackupDoPonteiro;
 
-		//ADICIONO O NO LOCAL 
-		globalPecaBackupDoPonteiro = 'C';
+			//ADICIONO O NO LOCAL 
+			globalPecaBackupDoPonteiro = 'C';
 
-		//GUARDO A LOCALIZACAO DA PECA ANTERIOR
-		globalLinhaPecaCapturada = globalLinhaPonteiro;
-		globalColunaPecaCapturada = globalColunaPonteiro;
+			//GUARDO A LOCALIZACAO DA PECA ANTERIOR
+			globalLinhaPecaCapturada = globalLinhaPonteiro;
+			globalColunaPecaCapturada = globalColunaPonteiro;
+		}
+	}
+	else {
+		if(globalPecaDeveJogarAgora == 'B')
+			memcpy(globalAvisos, AVISOS_MOVIMENTAR_PECA_BRANCA, strlen(AVISOS_MOVIMENTAR_PECA_BRANCA) + 1);
+		else if(globalPecaDeveJogarAgora == 'P')
+			memcpy(globalAvisos, AVISOS_MOVIMENTAR_PECA_PRETA, strlen(AVISOS_MOVIMENTAR_PECA_PRETA) + 1);
+		else if(globalPecaBackupDoPonteiro == ' ')
+			memcpy(globalAvisos, AVISOS_MOVIMENTAR_SEM_PECA, strlen(AVISOS_MOVIMENTAR_SEM_PECA) + 1);
 	}
 }
 
@@ -281,6 +305,8 @@ void validaJogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
 
 			globalPecaCapturada = ' ';
+
+			return;
 		}
 
 	}
@@ -309,6 +335,8 @@ void validaJogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
 
 			globalPecaCapturada = ' ';
+
+			return;
 		}
 	}
 
@@ -336,6 +364,8 @@ void validaJogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
 
 			globalPecaCapturada = ' ';
+
+			return;
 		}
 	}
 
@@ -363,8 +393,12 @@ void validaJogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
 
 			globalPecaCapturada = ' ';
+
+			return;
 		}
 	}
+
+	memcpy(globalAvisos, AVISOS_MOVIMENTO_INVALIDO_POSICAO_ERRADA, strlen(AVISOS_MOVIMENTO_INVALIDO_POSICAO_ERRADA) + 1);
 
 }
 
@@ -387,9 +421,15 @@ void validarMovimentoPecaPreta(char** tabuleiroBackEnd) {
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
 
 			globalPecaCapturada = ' ';
+
+			return;
 		}
 
 		validaJogadaParaEliminarPecaInimiga(tabuleiroBackEnd);
+	}
+	else {
+	
+		memcpy(globalAvisos, AVISOS_MOVIMENTO_INVALIDO_POSICAO_OCUPADA, strlen(AVISOS_MOVIMENTO_INVALIDO_POSICAO_OCUPADA) + 1);
 	}
 
 }
@@ -413,19 +453,32 @@ void validarMovimentoPecaBranca(char** tabuleiroBackEnd) {
 			globalPecaBackupDoPonteiro = globalPecaCapturada;
 
 			globalPecaCapturada = ' ';
+
+			return;
 		}
+
+		validaJogadaParaEliminarPecaInimiga(tabuleiroBackEnd);
+	}
+	else {
+		memcpy(globalAvisos, AVISOS_MOVIMENTO_INVALIDO_POSICAO_OCUPADA, strlen(AVISOS_MOVIMENTO_INVALIDO_POSICAO_OCUPADA) + 1);
 	}
 
-	validaJogadaParaEliminarPecaInimiga(tabuleiroBackEnd);
+	
 }
 
 void soltaPecaJogador(char** tabuleiroBackEnd) {
 
 	if (globalPecaCapturada == 'P')
+	{
 		validarMovimentoPecaPreta(tabuleiroBackEnd);
+		globalPecaDeveJogarAgora = 'B';
+	}
 
 	if (globalPecaCapturada == 'B')
+	{
 		validarMovimentoPecaBranca(tabuleiroBackEnd);
+		globalPecaDeveJogarAgora = 'P';
+	}
 
 	/*TO DO, PECAS RAINHAS*/
 }
@@ -508,7 +561,6 @@ void movimentacaoNoTabuleiroBackEnd(char** tabuleiroBackEnd, int movimento) {
 
 	if (movimento == TECLA_GAMEPLAY_DIRECIONAL_DOWN)
 		moveParaBaixo(tabuleiroBackEnd);
-
 }
 
 int capturaTeclado() {
@@ -558,7 +610,7 @@ int main() {
 	registraTeclasDoJogo();
 
 	while (teclaDirecional != TECLA_MENU_OPCAO_SAIR) {
-		//system("color A");
+
 		intro();
 		teclaDirecional = capturaTeclado();
 
