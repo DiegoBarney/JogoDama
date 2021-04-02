@@ -40,27 +40,32 @@ struct dados_jogador
 	bool vencedor = false;
 };
 
-//Variavel global do ponteiro do jogo comandado pelo direcional
-int globalLinhaPonteiro = 0, 
-	globalColunaPonteiro = 0;
-char globalPecaBackupDoPonteiro = ' ';
+//Variavel global do ponteiro do jogo comandado pelo direcional --- //
+int		globalLinhaPonteiro = 0,									//
+		globalColunaPonteiro = 0;									//
+char	globalPecaBackupDoPonteiro = ' ';							//
+//------------------------------------------------------------------//
 
-//Variavel global da peca selecionada pelo player
-int globalLinhaPecaCapturada = 0, 
-	globalColunaPecaCapturada = 0;
+//Variavel global da peca selecionada pelo player --//
+int		globalLinhaPecaCapturada = 0,				//
+		globalColunaPecaCapturada = 0;				//
+													//
+char	globalPecaCapturada = ' ';					//
+//--------------------------------------------------//
 
-char globalPecaCapturada = ' ';
+//Variavel global do placar do jogo	 ---//
+int		globalPlacarPretas = 0,			//
+		globalPlacarBrancas = 0;		//
+//--------------------------------------//
 
-//Variavel global do placar do jogo
-int globalPlacarPretas = 0, 
-	globalPlacarBrancas = 0;
-
-//Variavel global de avisos do jogo para o player
-char globalAvisos[1000] = {' '};
-
-char globalPecaDeveJogarAgora = 'B';
-
-dados_jogador globalPlayer1, globalPlayer2;
+//Variavel global adicionais do jogo ---------------//
+char	globalAvisos[1000] = {' '};					//
+													//		
+char	globalPecaDeveJogarAgora = 'B';				//
+													//
+dados_jogador	globalPlayer1,						//
+				globalPlayer2;						//
+//--------------------------------------------------//
 
 void registraTeclasDoJogo()
 {
@@ -93,7 +98,7 @@ void verificaSeVirouRainhaOuRei(char** tabuleiroBackEnd) {
 			{
 				if (tabuleiroBackEnd[linha][coluna] == 'B')
 				{
-					tabuleiroBackEnd[linha][coluna] == 'Q';
+					tabuleiroBackEnd[linha][coluna] = 'Q';
 				}
 			}
 
@@ -101,7 +106,7 @@ void verificaSeVirouRainhaOuRei(char** tabuleiroBackEnd) {
 			{
 				if (tabuleiroBackEnd[linha][coluna] == 'P')
 				{
-					tabuleiroBackEnd[linha][coluna] == 'K';
+					tabuleiroBackEnd[linha][coluna] = 'K';
 				}
 			}
 		}
@@ -616,7 +621,7 @@ bool ehGanhador() {
 
 void capturaDadosJogador() {
 	system("cls");
-	int tam;
+	size_t tam;
 	printf("\x1b[31mDigite o nome do jogador que vai jogar com a peca BRANCA:");
 	fgets(globalPlayer1.nome, 40, stdin);
 	globalPlayer1.pecaJogador = 'B';
