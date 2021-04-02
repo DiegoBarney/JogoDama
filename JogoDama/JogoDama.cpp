@@ -60,6 +60,8 @@ char globalAvisos[1000] = {' '};
 
 char globalPecaDeveJogarAgora = 'B';
 
+dados_jogador globalPlayer1, globalPlayer2;
+
 void registraTeclasDoJogo()
 {
 	//DOC teclas virtuais https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
@@ -81,13 +83,37 @@ void registraTeclasDoJogo()
 	RegisterHotKey(NULL, 1, MOD_NOREPEAT, 0x63);//FUNCAO NUMERO 3
 }
 
+void verificaSeVirouRainhaOuRei(char** tabuleiroBackEnd) {
+
+	for (int linha = 0; linha < LINHAS; linha++)
+	{
+		for (int coluna = 0; coluna < COLUNAS; coluna++)
+		{
+			if (linha == 0)
+			{
+				if (tabuleiroBackEnd[linha][coluna] == 'B')
+				{
+					tabuleiroBackEnd[linha][coluna] == 'Q';
+				}
+			}
+
+			if (linha == 7)
+			{
+				if (tabuleiroBackEnd[linha][coluna] == 'P')
+				{
+					tabuleiroBackEnd[linha][coluna] == 'K';
+				}
+			}
+		}
+	}
+}
+
 void intro() {
 	system("cls");
 	printf("\x1b[37m ############ Bem vindo ao jogo \x1b[31m DamaBreuva\x1b[37m !!! ############\n\n");
 	printf("Pressione a tecla numero 1 para Comecar a jogar\n");
 	printf("Pressione a tecla numero 2 para acessar o tutorial do jogo\n");
 	printf("Pressione a tecla numero 3 para Sair\n");
-	
 }
 
 void imprimeTutorial()
@@ -179,8 +205,8 @@ void tabuleiroUserIterface(char** tabuleiroBackEnd) {
 		}
 	}
 	printf("\n\x1b[31m________________________________________________________________________________\n");
-	printf("\x1b[32mPlacar PRETAS:\x1b[37m %d", globalPlacarPretas);
-	printf("\n\x1b[32mPlacar BRANCAS:\x1b[37m %d\n", globalPlacarBrancas);
+	printf("\x1b[32mPlacar %s:\x1b[37m %d",globalPlayer2.nome, globalPlacarPretas);
+	printf("\n\x1b[32mPlacar %s:\x1b[37m %d\n", globalPlayer1.nome, globalPlacarBrancas);
 	printf("\x1b[32mAVISOS:\x1b[37m %s", globalAvisos);
 }
 
@@ -274,8 +300,6 @@ void pegaPeca(char** tabuleiroBackEnd) {
 			memcpy(globalAvisos, AVISOS_MOVIMENTAR_PECA_BRANCA, strlen(AVISOS_MOVIMENTAR_PECA_BRANCA) + 1);
 		else if(globalPecaDeveJogarAgora == 'P')
 			memcpy(globalAvisos, AVISOS_MOVIMENTAR_PECA_PRETA, strlen(AVISOS_MOVIMENTAR_PECA_PRETA) + 1);
-		else if(globalPecaBackupDoPonteiro == ' ')
-			memcpy(globalAvisos, AVISOS_MOVIMENTAR_SEM_PECA, strlen(AVISOS_MOVIMENTAR_SEM_PECA) + 1);
 	}
 }
 
@@ -468,6 +492,8 @@ void validarMovimentoPecaBranca(char** tabuleiroBackEnd) {
 
 void soltaPecaJogador(char** tabuleiroBackEnd) {
 
+	verificaSeVirouRainhaOuRei(tabuleiroBackEnd);
+
 	if (globalPecaCapturada == 'P')
 	{
 		validarMovimentoPecaPreta(tabuleiroBackEnd);
@@ -478,6 +504,11 @@ void soltaPecaJogador(char** tabuleiroBackEnd) {
 	{
 		validarMovimentoPecaBranca(tabuleiroBackEnd);
 		globalPecaDeveJogarAgora = 'P';
+	}
+
+	if (globalPecaCapturada == 'Q' || globalPecaCapturada == 'K')
+	{
+
 	}
 
 	/*TO DO, PECAS RAINHAS*/
@@ -563,6 +594,43 @@ void movimentacaoNoTabuleiroBackEnd(char** tabuleiroBackEnd, int movimento) {
 		moveParaBaixo(tabuleiroBackEnd);
 }
 
+bool ehGanhador() {
+
+	if (globalPlacarPretas == 12) {
+
+		system("cls");
+		printf("\x1b[37m ############ Parabens \x1b[31m %s, voce venceu o Jogo\x1b[37m !!! ############\n\n", globalPlayer2.nome);
+		return true;
+	}
+
+	if (globalPlacarBrancas == 12) {
+
+		system("cls");
+		printf("\x1b[37m ############ Parabens \x1b[31m %s, voce venceu o Jogo\x1b[37m !!! ############\n\n", globalPlayer1.nome);
+		return true;
+	}
+
+	return false;
+
+}
+
+void capturaDadosJogador() {
+	system("cls");
+	int tam;
+	printf("\x1b[31mDigite o nome do jogador que vai jogar com a peca BRANCA:");
+	fgets(globalPlayer1.nome, 40, stdin);
+	globalPlayer1.pecaJogador = 'B';
+
+	tam = strlen(globalPlayer1.nome);
+	globalPlayer1.nome[tam-1] = '\0';
+
+	printf("\n\x1b[37mDigite o nome do jogador que vai jogar com a peca PRETA:");
+	fgets(globalPlayer2.nome, 40, stdin);
+	globalPlayer2.pecaJogador = 'P';
+	tam = strlen(globalPlayer2.nome);
+	globalPlayer2.nome[tam-1] = '\0';
+}
+
 int capturaTeclado() {
 	MSG msg = { 0 };
 
@@ -617,11 +685,11 @@ int main() {
 		switch (teclaDirecional) {
 
 			case TECLA_MENU_OPCAO_JOGAR:
-
+				capturaDadosJogador();
 				tabuleiroBackEnd = organizaTabuleiroBackEndIncial();
 				movimentacaoNoTabuleiroBackEnd(tabuleiroBackEnd, TABULEIRO_PONTEIRO_INICIAL);
 
-				while (teclaDirecional != TECLA_GAMEPLAY_ACAO_SAIR_DO_JOGO) {
+				while (teclaDirecional != TECLA_GAMEPLAY_ACAO_SAIR_DO_JOGO && ehGanhador() == false) {
 					tabuleiroUserIterface(tabuleiroBackEnd);
 					teclaDirecional = capturaTeclado();
 					movimentacaoNoTabuleiroBackEnd(tabuleiroBackEnd, teclaDirecional);
