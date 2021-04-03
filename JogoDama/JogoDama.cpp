@@ -323,7 +323,7 @@ void pegaPeca(char** tabuleiroBackEnd) {
 	}
 }
 
-void validaJogadaParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
+void validarJogadaPecaComumParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 
 	//VERIFICO SE AS JOGADAS ESTAO SENDO PARA CAPTURAR PECA INIMIGA A DIREITA, AVANÇANDO O TABULEIRO
 	if ((globalLinhaPecaSelecionada + 2) == globalLinhaPonteiro && (globalColunaPecaSelecionada + 2) == globalColunaPonteiro) {
@@ -433,7 +433,7 @@ void validarMovimentoSimplesPecaPreta(char** tabuleiroBackEnd) {
 			return;
 		}
 
-		validaJogadaParaEliminarPecaInimiga(tabuleiroBackEnd);
+		validarJogadaPecaComumParaEliminarPecaInimiga(tabuleiroBackEnd);
 	}
 	else {
 	
@@ -456,7 +456,7 @@ void validarMovimentoSimplesPecaBranca(char** tabuleiroBackEnd) {
 			return;
 		}
 
-		validaJogadaParaEliminarPecaInimiga(tabuleiroBackEnd);
+		validarJogadaPecaComumParaEliminarPecaInimiga(tabuleiroBackEnd);
 	}
 	else {
 		memcpy(globalAvisos, AVISOS_MOVIMENTO_INVALIDO_POSICAO_OCUPADA, strlen(AVISOS_MOVIMENTO_INVALIDO_POSICAO_OCUPADA) + 1);
@@ -464,13 +464,13 @@ void validarMovimentoSimplesPecaBranca(char** tabuleiroBackEnd) {
 }
 
 void validarJogadaRainhaOuReiParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
+
 	//verifico a diagonal (direita abaixo) para captura
-	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha < LINHAS && coluna < COLUNAS; linha++, coluna++) {
+	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha < (LINHAS-1) && coluna < (COLUNAS-1); linha++, coluna++) {
 
 		if (((tabuleiroBackEnd[linha][coluna] == 'P' || tabuleiroBackEnd[linha][coluna] == 'K') && globalPecaSelecionada == 'Q') ||
 			((tabuleiroBackEnd[linha][coluna] == 'B' || tabuleiroBackEnd[linha][coluna] == 'Q') && globalPecaSelecionada == 'K'))
 		{
-
 			if (tabuleiroBackEnd[linha + 1][coluna + 1] == ' ')
 			{
 				if ((linha + 1) == globalLinhaPonteiro && (coluna + 1) == globalColunaPonteiro)
@@ -485,18 +485,16 @@ void validarJogadaRainhaOuReiParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 
 					soltaPecaAposValidacoes(tabuleiroBackEnd);
 				}
-
 			}
 		}
 	}
 
 	//verifico a diagonal (esquerda abaixo) para captura
-	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha < LINHAS && coluna >= COLUNAS; linha++, coluna--) {
+	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha < (LINHAS-1) && coluna >= 1; linha++, coluna--) {
 
 		if (((tabuleiroBackEnd[linha][coluna] == 'P' || tabuleiroBackEnd[linha][coluna] == 'K') && globalPecaSelecionada == 'Q') ||
 			((tabuleiroBackEnd[linha][coluna] == 'B' || tabuleiroBackEnd[linha][coluna] == 'Q') && globalPecaSelecionada == 'K'))
 		{
-
 			if (tabuleiroBackEnd[linha + 1][coluna - 1] == ' ')
 			{
 				if ((linha + 1) == globalLinhaPonteiro && (coluna - 1) == globalColunaPonteiro)
@@ -511,10 +509,60 @@ void validarJogadaRainhaOuReiParaEliminarPecaInimiga(char** tabuleiroBackEnd) {
 
 					soltaPecaAposValidacoes(tabuleiroBackEnd);
 				}
-
 			}
 		}
 	}
+
+	//verifico a diagonal (esquerda acima) para captura
+	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha >= 1 && coluna >= 1; linha--, coluna--) {
+
+		if (((tabuleiroBackEnd[linha][coluna] == 'P' || tabuleiroBackEnd[linha][coluna] == 'K') && globalPecaSelecionada == 'Q') ||
+			((tabuleiroBackEnd[linha][coluna] == 'B' || tabuleiroBackEnd[linha][coluna] == 'Q') && globalPecaSelecionada == 'K'))
+		{
+			if (tabuleiroBackEnd[linha - 1][coluna - 1] == ' ')
+			{
+				if ((linha - 1) == globalLinhaPonteiro && (coluna - 1) == globalColunaPonteiro)
+				{
+					//ELIMINO PECA INIMIGA
+					tabuleiroBackEnd[linha][coluna] = ' ';
+
+					if (globalPecaSelecionada == 'K')
+						globalPlacarPretas++;
+					else
+						globalPlacarBrancas++;
+
+					soltaPecaAposValidacoes(tabuleiroBackEnd);
+				}
+			}
+		}
+	}
+
+
+	//verifico a diagonal (direita acima) para captura
+	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha >= 0 && coluna < COLUNAS; linha--, coluna++) {
+
+		if (((tabuleiroBackEnd[linha][coluna] == 'P' || tabuleiroBackEnd[linha][coluna] == 'K') && globalPecaSelecionada == 'Q') ||
+			((tabuleiroBackEnd[linha][coluna] == 'B' || tabuleiroBackEnd[linha][coluna] == 'Q') && globalPecaSelecionada == 'K'))
+		{
+			if (tabuleiroBackEnd[linha - 1][coluna + 1] == ' ')
+			{
+				if ((linha - 1) == globalLinhaPonteiro && (coluna + 1) == globalColunaPonteiro)
+				{
+					//ELIMINO PECA INIMIGA
+					tabuleiroBackEnd[linha][coluna] = ' ';
+
+					if (globalPecaSelecionada == 'K')
+						globalPlacarPretas++;
+					else
+						globalPlacarBrancas++;
+
+					soltaPecaAposValidacoes(tabuleiroBackEnd);
+				}
+			}
+		}
+	}
+
+
 }
 
 void validarMovimentoSimplesRainhaOuRei(char** tabuleiroBackEnd) {
@@ -537,7 +585,7 @@ void validarMovimentoSimplesRainhaOuRei(char** tabuleiroBackEnd) {
 	}
 
 	//verifico jogada simples  (esquerda abaixo) para captura
-	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha < LINHAS && coluna >= COLUNAS; linha++, coluna--) {
+	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha < LINHAS && coluna >= 0; linha++, coluna--) {
 
 		if (tabuleiroBackEnd[linha][coluna] == ' ')
 		{
@@ -555,7 +603,7 @@ void validarMovimentoSimplesRainhaOuRei(char** tabuleiroBackEnd) {
 	}
 
 	//verifico jogada simples  (esquerda acima) para captura
-	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha >= LINHAS && coluna >= COLUNAS; linha--, coluna--) {
+	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha >= 0 && coluna >= 0; linha--, coluna--) {
 
 		if (tabuleiroBackEnd[linha][coluna] == ' ')
 		{
@@ -573,7 +621,7 @@ void validarMovimentoSimplesRainhaOuRei(char** tabuleiroBackEnd) {
 	}
 
 	//verifico jogada simples  (direita acima) para captura
-	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha >= LINHAS && coluna < COLUNAS; linha--, coluna++) {
+	for (int linha = globalLinhaPecaSelecionada, coluna = globalColunaPecaSelecionada; linha >= 0 && coluna < COLUNAS; linha--, coluna++) {
 
 		if (tabuleiroBackEnd[linha][coluna] == ' ')
 		{
