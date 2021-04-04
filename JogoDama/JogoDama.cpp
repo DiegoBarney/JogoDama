@@ -434,11 +434,9 @@ void validarMovimentoSimplesPecaPreta(char** tabuleiroBackEnd) {
 
 			return;
 		}
-
 		validarJogadaPecaComumParaEliminarPecaInimiga(tabuleiroBackEnd);
 	}
 	else {
-	
 		memcpy(globalAvisos, AVISOS_MOVIMENTO_INVALIDO_POSICAO_OCUPADA, strlen(AVISOS_MOVIMENTO_INVALIDO_POSICAO_OCUPADA) + 1);
 	}
 
@@ -468,9 +466,10 @@ void validarMovimentoSimplesPecaBranca(char** tabuleiroBackEnd) {
 void validarJogadaRainhaOuRei(char** tabuleiroBackEnd) {
 	int linhaPecaInimiga = 0, colunaPecaInimiga = 0;
 
-	//verifico a diagonal (direita abaixo) para captura
+	//VALIDACAO DIAGONAL DIREITA A BAIXO
 	for (int linha = globalLinhaPonteiro, coluna = globalColunaPonteiro; linha < LINHAS  && coluna < COLUNAS; linha++, coluna++) {
 
+		//MOVIMENTO SEM CAPTURA
 		if (tabuleiroBackEnd[linha][coluna] != ' ') {
 
 			if (tabuleiroBackEnd[linha][coluna] == 'C')
@@ -478,7 +477,7 @@ void validarJogadaRainhaOuRei(char** tabuleiroBackEnd) {
 				soltaPecaAposValidacoes(tabuleiroBackEnd);
 			}
 			else {
-
+				//MOVIMENTO COM CAPTURA
 				if (((tabuleiroBackEnd[linha][coluna] == 'P' || tabuleiroBackEnd[linha][coluna] == 'K') && globalPecaSelecionada == 'Q') ||
 					((tabuleiroBackEnd[linha][coluna] == 'B' || tabuleiroBackEnd[linha][coluna] == 'Q') && globalPecaSelecionada == 'K')) {
 
@@ -513,13 +512,18 @@ void validarJogadaRainhaOuRei(char** tabuleiroBackEnd) {
 
 					}
 				}
+				else {
+					if(tabuleiroBackEnd[linha][coluna]!='*')
+						break;
+				}
 			}
 		}
 	}
 	
-	//verifico a diagonal (esquerda abaixo) para captura
+	//VALIDACAO DIAGONAL ESQUERDA A BAIXO
 	for (int linha = globalLinhaPonteiro, coluna = globalColunaPonteiro; linha < LINHAS && coluna >= 0; linha++, coluna--) {
 
+		//MOVIMENTO SEM CAPTURA
 		if (tabuleiroBackEnd[linha][coluna] != ' ') {
 
 			if (tabuleiroBackEnd[linha][coluna] == 'C')
@@ -527,7 +531,7 @@ void validarJogadaRainhaOuRei(char** tabuleiroBackEnd) {
 				soltaPecaAposValidacoes(tabuleiroBackEnd);
 			}
 			else {
-
+				//MOVIMENTO COM CAPTURA
 				if (((tabuleiroBackEnd[linha][coluna] == 'P' || tabuleiroBackEnd[linha][coluna] == 'K') && globalPecaSelecionada == 'Q') ||
 					((tabuleiroBackEnd[linha][coluna] == 'B' || tabuleiroBackEnd[linha][coluna] == 'Q') && globalPecaSelecionada == 'K')) {
 
@@ -562,13 +566,19 @@ void validarJogadaRainhaOuRei(char** tabuleiroBackEnd) {
 
 					}
 				}
+				else
+				{
+					if (tabuleiroBackEnd[linha][coluna] != '*')
+						break;
+				}
 			}
 		}
 	}
 
-	//verifico a diagonal (direita acima) para captura
+	//VALIDACAO DIAGONAL DIREITA ACIMA
 	for (int linha = globalLinhaPonteiro, coluna = globalColunaPonteiro; linha >= 0 && coluna < COLUNAS; linha--, coluna++) {
 
+		//MOVIMENTO SEM CAPTURA
 		if (tabuleiroBackEnd[linha][coluna] != ' ') {
 
 			if (tabuleiroBackEnd[linha][coluna] == 'C')
@@ -576,7 +586,7 @@ void validarJogadaRainhaOuRei(char** tabuleiroBackEnd) {
 				soltaPecaAposValidacoes(tabuleiroBackEnd);
 			}
 			else {
-
+				//MOVIMENTO COM CAPTURA
 				if (((tabuleiroBackEnd[linha][coluna] == 'P' || tabuleiroBackEnd[linha][coluna] == 'K') && globalPecaSelecionada == 'Q') ||
 					((tabuleiroBackEnd[linha][coluna] == 'B' || tabuleiroBackEnd[linha][coluna] == 'Q') && globalPecaSelecionada == 'K')) {
 
@@ -611,13 +621,18 @@ void validarJogadaRainhaOuRei(char** tabuleiroBackEnd) {
 
 					}
 				}
+				else {
+					if (tabuleiroBackEnd[linha][coluna] != '*')
+						break;
+				}
 			}
 		}
 	}
 
-	//verifico a diagonal (esquerda acima) para captura
+	//VALIDACAO DIAGONAL ESQUERDA ACIMA
 	for (int linha = globalLinhaPonteiro, coluna = globalColunaPonteiro; linha >= 0 && coluna >= 0; linha--, coluna--) {
 
+		//MOVIMENTO SEM CAPTURA
 		if (tabuleiroBackEnd[linha][coluna] != ' ') {
 
 			if (tabuleiroBackEnd[linha][coluna] == 'C')
@@ -625,7 +640,7 @@ void validarJogadaRainhaOuRei(char** tabuleiroBackEnd) {
 				soltaPecaAposValidacoes(tabuleiroBackEnd);
 			}
 			else {
-
+				//MOVIMENTO COM CAPTURA
 				if (((tabuleiroBackEnd[linha][coluna] == 'P' || tabuleiroBackEnd[linha][coluna] == 'K') && globalPecaSelecionada == 'Q') ||
 					((tabuleiroBackEnd[linha][coluna] == 'B' || tabuleiroBackEnd[linha][coluna] == 'Q') && globalPecaSelecionada == 'K')) {
 
@@ -659,6 +674,10 @@ void validarJogadaRainhaOuRei(char** tabuleiroBackEnd) {
 						}
 
 					}
+				}
+				else {
+					if (tabuleiroBackEnd[linha][coluna] != '*')
+						break;
 				}
 			}
 		}
