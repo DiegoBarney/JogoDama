@@ -1,15 +1,15 @@
 #include "TecladoJogo.h"
 
-static TecladoJogo* instance_;
+static TecladoJogo* _instance;
 
 TecladoJogo* TecladoJogo::getInstance()
 {
-	if (instance_ == nullptr) {
+	if (_instance == nullptr) {
 
-		instance_ = new TecladoJogo();
+		_instance = new TecladoJogo();
 	}
 
-	return instance_;
+	return _instance;
 }
 
 TecladoJogo::TecladoJogo() {
@@ -76,5 +76,4 @@ int TecladoJogo::capturaTeclado() {
 	}
 
 	return TECLA_INVALIDA;
-
 }

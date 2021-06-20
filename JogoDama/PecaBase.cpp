@@ -5,16 +5,16 @@ extern int	globalPlacarPretas,
 extern char	globalAvisos[1000];
 
 
-static PecaBase* instance_;
+static PecaBase* _instance;
 
 PecaBase* PecaBase::getInstance(char** tabuleiroBackEnd)
 {
-	if (instance_ == nullptr) {
+	if (_instance == nullptr) {
 
-		instance_ = new PecaBase(tabuleiroBackEnd);
+		_instance = new PecaBase(tabuleiroBackEnd);
 	}
 
-	return instance_;
+	return _instance;
 }
 
 PecaBase::PecaBase(char** tabuleiroBackEnd) {
@@ -26,11 +26,11 @@ PecaBase::PecaBase(char** tabuleiroBackEnd) {
 PecaBase::~PecaBase() {
 	globalLinhaPecaSelecionada = 0;
 	globalColunaPecaSelecionada = 0;									
-	globalPecaSelecionada = ' ';
+	globalPecaSelecionada = VAZIO;
 	globalLinhaPonteiro = 0;							
 	globalColunaPonteiro = 0;							
-	globalPecaBackupDoPonteiro = ' ';	
-	instance_ = nullptr;
+	globalPecaBackupDoPonteiro = VAZIO;
+	_instance = nullptr;
 }
 
 void PecaBase::moveParaDireita(char** tabuleiroBackEnd){
